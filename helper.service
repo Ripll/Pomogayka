@@ -1,0 +1,23 @@
+[Unit]
+Description = helper
+After = network.target
+
+[Service]
+PermissionsStartOnly = true
+PIDFile = /run/helper/helper.pid
+User = root
+Group = root
+WorkingDirectory = /root/helper
+ExecStartPre = /bin/mkdir /run/helper
+ExecStartPre = /bin/chown -R root:root /run/helper
+ExecStart = /usr/bin/env gunicorn --certfile=webhook_cert.pem --keyfile=webhook_pkey.pem --bind 0.0.0.0:88 wsgi:app --timeout 3000 --pid /run/helper/helper.pid
+ExecReload = /bin/kill -s HUP $MAINPID
+ExecStop = /bin/kill -s TERM $MAINPID
+ExecStopPost = /bin/rm -rf /run/helper
+PrivateTmp = true
+RemainAfterExit=no
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy = multi-user.target
