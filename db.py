@@ -2,7 +2,7 @@
 
 import pymongo
 
-config_uri = "mongodb://user:Ololosha123@ds119024.mlab.com:19024/journals"
+config_uri = "mongodb://**:**@ds119024.mlab.com:19024/journals"
 client = pymongo.MongoClient(config_uri)
 
 db = client.get_default_database()["users"]
